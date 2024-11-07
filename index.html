@@ -1,16 +1,13 @@
 <html>
 
 <head>
-<title>SEPA Dashboard 0.9.9</title>
+<title>Agorà Editor</title>
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Adapted from initial Fabio Viola version">
-<meta name="author" content="Fabio Viola">
 <meta name="author" content="Luca Roffia">
-<meta name="author" content="Cristiano Aguzzi">
-<link rel="icon" href="icon/newLogo.png">
+<link rel="icon" href="icon/Icon_Logo.png">
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
@@ -31,8 +28,9 @@
 
 <body onload="onInit()">
 	<nav class="navbar">
-		<a class="navbar-brand" href="#"> <img src="icon/newFullLogo.png"
-			width="100" class="d-inline-block align-top" alt=""> Dashboard
+		<a class="navbar-brand" href="#"> <img src="icon/Icon_Logo.png"
+			width="50" class="d-inline-block align-center" alt=""> Agorà
+			Editor
 		</a>
 	</nav>
 
@@ -42,13 +40,13 @@
 			role="tab" aria-controls="pills-configure" aria-selected="true">Configure</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-update-tab"
 			data-toggle="pill" data-target="#pills-update" href="#pills-update"
-			role="tab" aria-controls="pills-update" aria-selected="false">Update</a></li>
+			role="tab" aria-controls="pills-update" aria-selected="false">Crop</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-query-tab"
 			data-toggle="pill" href="#pills-query" role="tab"
-			aria-controls="pills-query" aria-selected="false">Query</a></li>
+			aria-controls="pills-query" aria-selected="false">Soil</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-subscribe-tab"
 			data-toggle="pill" href="#pills-subscribe" role="tab"
-			aria-controls="pills-subscribe" aria-selected="false">Subscribe</a></li>
+			aria-controls="pills-subscribe" aria-selected="false">Unit</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-help-tab"
 			data-toggle="pill" href="#pills-help" role="tab"
 			aria-controls="pills-help" aria-selected="false">Help</a></li>
@@ -100,7 +98,7 @@
 
 					<div class="row flex-row-reverse">
 						<label><span class="badge badge-pill badge-info">Literal</span>&nbsp;
-						<span class="badge badge-pill badge-success mr-3">URI</span> </label>
+							<span class="badge badge-pill badge-success mr-3">URI</span> </label>
 					</div>
 
 
@@ -249,126 +247,40 @@
 		<div class="tab-pane fade show active mt-3" id="pills-configure"
 			role="tabpanel" aria-labelledby="pills-configure-tab">
 			<div class="container-fluid">
-				<div class="input-group mb-3">
-					<div class="custom-file">
-						<input type="file" class="custom-file-input" id="loadJsap"
-							aria-describedby="inputGroupFileAddon04"> <label
-							class="custom-file-label" for="loadJsap">Select JSAP file</label>
-					</div>
-					<div class="input-group-append">
-						<button class="btn btn-outline-secondary" type="button"
-							id="inputGroupFileAddon04" onclick="javascript:loadJsap()">Load</button>
-					</div>
-				</div>
 
 				<div class="card border rounded-3" id="configPanel">
 					<div class="card-header rounded-3 text-white bg-primary">
-						<i class="fas fa-cogs"></i>&nbsp;SEPA broker connection parameters
+						<i class="fas fa-cogs"></i>&nbsp;Agorà API
 					</div>
 
 					<div class="card-body">
 
-						<div class="input-group input-group-sm">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Host</span>
-							</div>
-							<input type="text" class="form-control"
-								value="dld.arces.unibo.it" id="host">
-						</div>
-
-						<label class="col-form-label-sm mt-3"><b>SPARQL 1.1
-								protocol</b></label>
-
-						<div class="input-group input-group-sm">
-
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Protocol</span>
-							</div>
-							<input type="text" class="form-control" value="http"
-								id="sparql11protocol">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Port</span>
-							</div>
-							<input type="text" class="form-control" value="8668"
-								id="sparql11port">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Update
-									path</span>
-							</div>
-							<input type="text" class="form-control" value="/update"
-								id="updatePath">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Query
-									path</span>
-							</div>
-							<input type="text" class="form-control" value="/query"
-								id="queryPath">
-						</div>
-
-						<label class="col-form-label-sm mt-3"><b>SPARQL 1.1
-								Secure Event protocol</b></label>
-
-						<div class="input-group input-group-sm">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Protocol</span>
-							</div>
-							<input type="text" class="form-control" value="ws"
-								id="sparql11seprotocol">
-							<div class="input-group-prepend mb">
-								<span class="input-group-text" id="basic-addon1">Port</span>
-							</div>
-							<input type="text" class="form-control" value="9668"
-								id="sparql11seport">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="basic-addon1">Subscribe
-									path</span>
-							</div>
-							<input type="text" class="form-control" value="/subscribe"
-								id="subscribePath">
-						</div>
-					</div>
-				</div>
-
-				<div class="card border rounded-3 mt-3">
-					<div class="card-header rounded-3 text-white bg-primary">
-						<i class="fas fa-list-ul"></i>&nbsp;Namespaces
-					</div>
-					<div class="card-body">
-						<form class="form small">
-							<div class="input-group input-group-sm mb-3">
+						<form>
+							<div class="form-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text" id="basic-addon1">Prefix</span>
+									<span class="input-group-text" id="basic-addon1">URL</span>
 								</div>
-								<input type="text" class="form-control" placeholder="Username"
-									value="wot-at-arces" aria-label="Username"
-									aria-describedby="basic-addon1" id="prefixField">
+								<input type="text" class="form-control"
+									value="https://api.beta.agora.vaimee.com" id="url">
+							</div>
+							<div class="form-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text" id="basic-addon1">Namespace</span>
+									<span class="input-group-text" id="basic-addon1">Username</span>
 								</div>
-								<input type="text" class="form-control" placeholder="Username"
-									value="http://site.unibo.it/wot" aria-label="Username"
-									aria-describedby="basic-addon1" id="namespaceField">
+								<input type="text" class="form-control"
+									value="demo" id="user">
 							</div>
-							<div class="form-group" align="center">
-								<button type="button" class="btn btn-primary"
-									onclick="javascript:addNamespace();">
-									<small><i class="fas fa-edit"></i>&nbsp;Add</small>
-								</button>
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">Password</span>
+								</div>
+								<input type="password" class="form-control"
+									value="demo@agora24!" id="password">
 							</div>
+							<button type="submit" class="btn btn-primary">Login</button>
 						</form>
-						<br>
-						<table
-							class="table table-bordered table-hover table-condensed table-sm"
-							id="namespacesTable">
-							<tr>
-								<th>Prefix</th>
-								<th>Namespace</th>
-								<th>Actions</th>
-							</tr>
-						</table>
 					</div>
 				</div>
-
 			</div>
 		</div>
 
@@ -402,8 +314,8 @@
 					</div>
 					<div class="card-body">
 						<div class="alert alert-warning" role="alert">
-							<a href="http://vaimee.org/TR/sepa.html"
-								class="alert-link">SPARQL Event Processing Architecture</a>
+							<a href="http://vaimee.org/TR/sepa.html" class="alert-link">SPARQL
+								Event Processing Architecture</a>
 						</div>
 						<div class="alert alert-warning" role="alert">
 							<a href="http://vaimee.org/TR/sparql11-se-protocol.html"
@@ -414,8 +326,8 @@
 								class="alert-link">SPARQL 1.1 Subscribe Language</a>
 						</div>
 						<div class="alert alert-warning" role="alert">
-							<a href="http://vaimee.org/TR/jsap.html"
-								class="alert-link">JSON SPARQL Application Profile</a>
+							<a href="http://vaimee.org/TR/jsap.html" class="alert-link">JSON
+								SPARQL Application Profile</a>
 						</div>
 					</div>
 				</div>
