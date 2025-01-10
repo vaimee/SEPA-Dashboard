@@ -1,3 +1,5 @@
+let queryDataTable; //*Used by dataTables to store table object, can be use to render data efficiently
+const subscriptionDataTables={};
 var openSubscriptions = new Map();
 var myJson = {
 	namespaces : {}
@@ -14,8 +16,8 @@ let emptyMarker = {
 }
 
 function onInit() {
+	console.log("### SEPA DASHBOARD ###")
 	loadEditors()
-
 	let type = getQueryVariable("mode");
 	switch (type) {
 		case "local":
@@ -27,9 +29,26 @@ function onInit() {
 		default:
 			break;
 	}
-	
 	defaultNamespaces();
-	
+
+	//LOAD DEFAULT JSAP
+	const env= getEnvVariables();
+	if(env.DEFAULT_JSAP!=null && env.DEFAULT_JSAP!=undefined && env.DEFAULT_JSAP!=""){
+		console.log("loading default jsap")
+		myJson= env.DEFAULT_JSAP;
+		injectMyJsonIntoEditor();
+	}else{
+		console.log("skipping load default jsap")
+	}
+	//LOAD ENV
+	if(env["HOST"]!=null&&env["HOST"]!="") $("#host").val(env["HOST"]);
+	if(env["HTTP_PORT"]!=null&&env["HTTP_PORT"]!="") $("#sparql11port").val(env["HTTP_PORT"]);
+	if(env["HTTP_PROTOCOL"]!=null&&env["HTTP_PROTOCOL"]!="") $("#sparql11protocol").val(env["HTTP_PROTOCOL"]);
+	if(env["WS_PORT"]!=null&&env["WS_PORT"]!="") $("#sparql11seport").val(env["WS_PORT"]);
+	if(env["WS_PROTOCOL"]!=null&&env["WS_PROTOCOL"]!="") $("#sparql11seprotocol").val(env["WS_PROTOCOL"]);
+	if(env["UPDATE_PATH"]!=null&&env["UPDATE_PATH"]!="") $("#updatePath").val(env["UPDATE_PATH"]);
+	if(env["QUERY_PATH"]!=null&&env["QUERY_PATH"]!="") $("#queryPath").val(env["QUERY_PATH"]);
+	if(env["SUBSCRIBE_PATH"]!=null&&env["SUBSCRIBE_PATH"]!="") $("#subscribePath").val(env["SUBSCRIBE_PATH"]);
 }
 
 function loadEditors() {
@@ -153,6 +172,7 @@ function unFixGlobalNamespaces(editor) {
 	editor.prefixMarker.clear()
 }
 
+
 function loadJsap() {
 	// check if file reader is supported
 	if (!window.FileReader) {
@@ -168,94 +188,93 @@ function loadJsap() {
 
 		// create a mew instance of the file reader
 		fr = new FileReader();
-		var text;
 		fr.onload = function() {
-
 			// read the content of the file
 			var decodedData = fr.result;
-
 			// parse the JSON file
 			myJson = JSON.parse(decodedData);
-
-			// get the namespaces table
-			table = document.getElementById("namespacesTable");
-
-			// retrieve namespaces
-			for (pr in myJson["namespaces"]) {
-				addNamespaceToAll(pr,myJson.namespaces[pr])
-			}
-
-			fixGlobalNamespaces(queryEditor)
-			fixGlobalNamespaces(updateEditor)
-			fixGlobalNamespaces(subEditor)
-
-
-			// retrieve the URLs
-			$("#host").val(myJson["host"]);
-			
-			$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
-			$("#sparql11port").val(myJson["sparql11protocol"]["port"]);	
-			$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
-			$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
-			
-			ws = myJson["sparql11seprotocol"]["protocol"];
-			
-			$("#sparql11seprotocol").val(ws);
-			$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);	
-			$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
-			
-			// load queries
-			ul = document.getElementById("queryDropdown");
-			for (q in myJson["queries"]) {
-				li = document.createElement("li");
-				li.setAttribute("id", q);
-				li.innerHTML = q;
-				li.setAttribute("onclick",
-						"javascript:loadUQS(\"Q\", '" + q + "');");
-				li.setAttribute("data-toggle", "modal");
-				li.setAttribute("data-target", "#basicModal");
-				li.classList.add("dropdown-item");
-				li.classList.add("small");
-				ul.appendChild(li);
-			}
-			;
-			
-			// load subscribes
-			ul = document.getElementById("subscribeDropdown");
-			for (q in myJson["queries"]) {
-				li = document.createElement("li");
-				li.setAttribute("id", q);
-				li.innerHTML = q;
-				li.setAttribute("onclick",
-						"javascript:loadUQS(\"S\", '" + q + "');");
-				li.setAttribute("data-toggle", "modal");
-				li.setAttribute("data-target", "#basicModal");
-				li.classList.add("dropdown-item");
-				li.classList.add("small");
-				ul.appendChild(li);
-			}
-			;
-
-			// load updates
-			ul = document.getElementById("updateDropdown");
-			for (q in myJson["updates"]) {
-				li = document.createElement("li");
-				li.setAttribute("id", q);
-				li.innerHTML = q;
-				li.setAttribute("onclick", "javascript:loadUQS(\"U\", '"
-						+ q + "');");
-				li.setAttribute("data-toggle", "modal");
-				li.setAttribute("data-target", "#basicModal");
-				li.classList.add("dropdown-item");
-				li.classList.add("small");
-				ul.appendChild(li);
-			}
-			;
-
+			injectMyJsonIntoEditor();
 		};
 		fr.readAsText(file);
 	}
 };
+
+function injectMyJsonIntoEditor(){
+	//myJson = JSON.parse(decodedData);
+	// get the namespaces table
+	table = document.getElementById("namespacesTable");
+
+	// retrieve namespaces
+	for (pr in myJson["namespaces"]) {
+		addNamespaceToAll(pr,myJson.namespaces[pr])
+	}
+
+	fixGlobalNamespaces(queryEditor)
+	fixGlobalNamespaces(updateEditor)
+	fixGlobalNamespaces(subEditor)
+
+
+	// retrieve the URLs
+	$("#host").val(myJson["host"]);
+	
+	$("#sparql11protocol").val(myJson["sparql11protocol"]["protocol"]);
+	$("#sparql11port").val(myJson["sparql11protocol"]["port"]);	
+	$("#updatePath").val(myJson["sparql11protocol"]["update"]["path"]);
+	$("#queryPath").val(myJson["sparql11protocol"]["query"]["path"]);
+	
+	ws = myJson["sparql11seprotocol"]["protocol"];
+	
+	$("#sparql11seprotocol").val(ws);
+	$("#sparql11seport").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["port"]);	
+	$("#subscribePath").val(myJson["sparql11seprotocol"]["availableProtocols"][ws]["path"]);
+	
+	// load queries
+	ul = document.getElementById("queryDropdown");
+	for (q in myJson["queries"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick",
+				"javascript:loadUQS(\"Q\", '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;
+	
+	// load subscribes
+	ul = document.getElementById("subscribeDropdown");
+	for (q in myJson["queries"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick",
+				"javascript:loadUQS(\"S\", '" + q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+	;
+
+	// load updates
+	ul = document.getElementById("updateDropdown");
+	for (q in myJson["updates"]) {
+		li = document.createElement("li");
+		li.setAttribute("id", q);
+		li.innerHTML = q;
+		li.setAttribute("onclick", "javascript:loadUQS(\"U\", '"
+				+ q + "');");
+		li.setAttribute("data-toggle", "modal");
+		li.setAttribute("data-target", "#basicModal");
+		li.classList.add("dropdown-item");
+		li.classList.add("small");
+		ul.appendChild(li);
+	}
+}
 
 function getForcedBindings(u) {
 	let fb = ""
@@ -423,43 +442,95 @@ function query() {
 		
 		$("#queryResultLabel").html("["+getTimestamp()+ "] "+ data["results"]["bindings"].length +" results in "+(stop-start)+ " ms")
 		
-		$("#queryTable thead tr").empty();
-		$("#queryTable tbody").empty();
+		renderQueryResultsWithDataTable(data);
 		
-		for (name of data["head"]["vars"]) {
-			$("#queryTable thead tr").append("<th scope=\"col\">"+name+"</th>");
-		}
-	
-		
-		for (binding in data["results"]["bindings"]) {
-			$("#queryTable tbody").append("<tr></tr>");
-			tr = $("#queryTable tbody tr:last");
-			
-			for (name of data["head"]["vars"]) {
-				value = null;
-				type = "literal";
-				if (data["results"]["bindings"][binding][name] != null) {
-					type = data["results"]["bindings"][binding][name]["type"];
-					value = data["results"]["bindings"][binding][name]["value"];
-				}
-				
-				if (value === null) {
-					tr.append("<td class=\"table-danger\"></td>");
-				}
-				else {
-					if (type === "literal" || type === "typed-literal") {
-						if (type === "typed-literal") value = value + "^^" + data["results"]["bindings"][binding][name]["datatype"];
-						tr.append("<td class=\"table-primary\">"+value+"</td>");
-					}
-					else tr.append("<td class=\"table-success\">"+value+"</td>");
-				}
-				
-			}
-		}
 	 }).catch((err)=>{
 		 stop = Date.now();
 		 $("#queryResultLabel").html("["+getTimestamp()+ "] "+err+" *** Query FAILED in "+(stop-start)+ " ms ***");
 	 });
+}
+
+//Needed to optimize rendering with dataTables
+function renderQueryResultsWithDataTable(queryResponse,tableRef,tableId){
+	console.log("Rendering query results with dataTable...")
+	if(queryDataTable!=null) queryDataTable.destroy();
+	$("#queryTable").innerHTML="<thead><tr></tr></thead><tbody></tbody>";
+	queryDataTable = $("#queryTable").DataTable({
+		responsive: true,
+		scrollX: true,
+		dom: `<"top d-flex justify-content-between"
+				<"left"l><"right d-flex align-items-center"fB>
+			  >
+			  	rt
+			  <"bottom"ip>`, // Add the buttons UI: top - table (rt) - bottom
+		buttons: [  
+			"copy",
+			"csv",
+			"colvis"
+		],
+		columns: queryResponse["head"]["vars"].map((colName)=>{
+			return {title:colName}
+		}),
+		data: queryResponse["results"]["bindings"].map((binding)=>{
+			return queryResponse["head"]["vars"].map((colName)=>{
+				let value= binding[colName]?.value||null;
+				const type= binding[colName]?.type||null; 
+				if(type==="typed-literal" && value!=null) value=value+"^^"+binding[colName]["datatype"]
+				return value;
+			})
+		}),
+		createdRow: function(row,data,dataIndex){
+			for(let i=0; i<data.length; i++){
+				if(data[i]==null){
+					$('td', row).eq(i).addClass('table-danger')
+				}else{
+					const binding= queryResponse["results"]["bindings"][dataIndex];
+					const colName= queryResponse["head"]["vars"][i];
+					const type= binding[colName]["type"];
+					if (type === "literal" || type === "typed-literal") 
+						$('td',row).eq(i).addClass('table-primary')
+					else $('td', row).eq(i).addClass('table-success')
+				}
+			}
+		},
+		initComplete: function () {
+			// Remove 'btn-secondary' from CSV button and add 'btn-success'
+			$('.btn','.dt-buttons').removeClass('btn-secondary').addClass('btn-primary');
+		}
+	})
+}
+
+//!Deprecated
+function renderQueryResults(data){
+	clearQueryResults();
+	for (name of data["head"]["vars"]) {
+		$("#queryTable thead tr").append("<th scope=\"col\">"+name+"</th>");
+	}
+	for (binding in data["results"]["bindings"]) {
+		$("#queryTable tbody").append("<tr></tr>");
+		tr = $("#queryTable tbody tr:last");
+		
+		for (name of data["head"]["vars"]) {
+			value = null;
+			type = "literal";
+			if (data["results"]["bindings"][binding][name] != null) {
+				type = data["results"]["bindings"][binding][name]["type"];
+				value = data["results"]["bindings"][binding][name]["value"];
+			}
+			
+			if (value === null) {
+				tr.append("<td class=\"table-danger\"></td>");
+			}
+			else {
+				if (type === "literal" || type === "typed-literal") {
+					if (type === "typed-literal") value = value + "^^" + data["results"]["bindings"][binding][name]["datatype"];
+					tr.append("<td class=\"table-primary\">"+value+"</td>");
+				}
+				else tr.append("<td class=\"table-success\">"+value+"</td>");
+			}
+			
+		}
+	}
 }
 
 function clearQueryResults(){
@@ -686,4 +757,16 @@ function getQueryVariable(variable) {
 		}
 	}
 	console.log('Query variable %s not found', variable);
+}
+
+function getEnvVariables(){
+	let env= {}
+	if(
+		___SEPA_DASHBOARD_INLINE_JSON_CONFIG___!=null && 
+		___SEPA_DASHBOARD_INLINE_JSON_CONFIG___!=undefined
+	){
+		env= ___SEPA_DASHBOARD_INLINE_JSON_CONFIG___;
+	}
+	console.log("Env:",env);
+	return env;
 }

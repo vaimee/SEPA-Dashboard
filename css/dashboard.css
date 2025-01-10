@@ -10,3 +10,22 @@
 .non-editable {
 	background-color: #dcdcdc;
 }
+
+/*DataTable list n entries
+.dt-length {
+
+}*/
+/*DataTables search bar*/
+.dt-search {
+	margin-right: 10px; /* Adjust as needed */
+}
+.dt-search input{
+	width: 300px;
+}
+.dt-search label{
+	margin-right: 5px;
+}
+/*DataTables buttons style
+.dt-buttons .btn-secondary{
+	background-color: blue;
+}*/
