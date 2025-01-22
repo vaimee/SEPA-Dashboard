@@ -17,6 +17,7 @@ let emptyMarker = {
 
 function onInit() {
 	console.log("### SEPA DASHBOARD ###")
+	console.log("loading editors...")
 	loadEditors()
 	let type = getQueryVariable("mode");
 	switch (type) {
@@ -32,7 +33,10 @@ function onInit() {
 	defaultNamespaces();
 
 	//LOAD DEFAULT JSAP
+	console.log("loading environment variables...")
 	const env= getEnvVariables();
+	console.log("Host: "+env.HOST);
+	console.log("Jsap path: "+env.JSAP_PATH)
 	if(env.DEFAULT_JSAP!=null && env.DEFAULT_JSAP!=undefined && env.DEFAULT_JSAP!=""){
 		console.log("loading default jsap")
 		myJson= env.DEFAULT_JSAP;
@@ -49,6 +53,46 @@ function onInit() {
 	if(env["UPDATE_PATH"]!=null&&env["UPDATE_PATH"]!="") $("#updatePath").val(env["UPDATE_PATH"]);
 	if(env["QUERY_PATH"]!=null&&env["QUERY_PATH"]!="") $("#queryPath").val(env["QUERY_PATH"]);
 	if(env["SUBSCRIBE_PATH"]!=null&&env["SUBSCRIBE_PATH"]!="") $("#subscribePath").val(env["SUBSCRIBE_PATH"]);
+
+	//Initializing tree
+	$('#tree').treeview({data: getTree()});
+}
+  
+function getTree() {
+// Some logic to retrieve, or generate tree structure
+return [
+	{
+	  text: "Sensor",
+	  nodes: [
+		{
+		  text: "Child 1",
+		  nodes: [
+			{
+			  text: "Grandchild 1"
+			},
+			{
+			  text: "Grandchild 2"
+			}
+		  ]
+		},
+		{
+		  text: "Child 2"
+		}
+	  ]
+	},
+	{
+	  text: "Parent 2"
+	},
+	{
+	  text: "Parent 3"
+	},
+	{
+	  text: "Parent 4"
+	},
+	{
+	  text: "Parent 5"
+	}
+  ];
 }
 
 function loadEditors() {
@@ -434,7 +478,7 @@ function query() {
 
 	const sepa = Sepajs.client;
 	
-	config = {host : $("#host").val() , sparql11protocol: { protocol : "http", port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
+	config = {host : $("#host").val() , sparql11protocol: { protocol : $("#sparql11protocol").val(), port  : $("#sparql11port").val() , query : { "path" : $("#queryPath").val()}}};
 	
 	start = Date.now(); 
 	sepa.query(queryText,config).then((data)=>{
@@ -571,7 +615,7 @@ function subscribe() {
 
 	
 	ws = $("#sparql11seprotocol").val();
-	config = { host: $("#host").val(), sparql11seprotocol: { protocol: "ws", availableProtocols: {ws : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
+	config = { host: $("#host").val(), sparql11seprotocol: { protocol: ws, availableProtocols: {[ws] : {port : $("#sparql11seport").val() , path : $("#subscribePath").val()} } }};
 	
 	const sepa = Sepajs.client;
 	let id = generateIdBySuggestion($('#subscriptionAlias').val())

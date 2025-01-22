@@ -1,7 +1,7 @@
 <html>
 
 <head>
-<title>SEPA Dashboard 0.9.9</title>
+<title>SEPA DASHBOARD</title>
 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +10,7 @@
 <meta name="author" content="Fabio Viola">
 <meta name="author" content="Luca Roffia">
 <meta name="author" content="Cristiano Aguzzi">
+<meta name="author" content="Gregorio Monari">
 <link rel="icon" href="icon/newLogo.png">
 
 <!-- Bootstrap CSS -->
@@ -23,7 +24,7 @@
 	href="fontawesome-free-5.0.6/web-fonts-with-css/css/fontawesome-all.css">
 <link rel="stylesheet" href="css/dashboard.css">
 <link
-	href='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css'
+	href='https://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.min.css'
 	rel='stylesheet' type='text/css' />
 <meta name="theme-color" content="#007bff">
 <!--Data tables for showing results-->
@@ -33,8 +34,9 @@
 
 <body onload="onInit()">
 	<nav class="navbar">
-		<a class="navbar-brand" href="#"> <img src="icon/newFullLogo.png"
-			width="100" class="d-inline-block align-top" alt=""> Dashboard
+		<a class="navbar-brand d-flex align-items-center" href="#"> 
+			<img src="icon/newLogo.png" width="40" class="d-inline-block align-top" alt="">
+			<b>&nbsp;&nbsp;SEPA DASHBOARD</b>
 		</a>
 	</nav>
 
@@ -51,12 +53,21 @@
 		<li class="nav-item"><a class="nav-link" id="pills-subscribe-tab"
 			data-toggle="pill" href="#pills-subscribe" role="tab"
 			aria-controls="pills-subscribe" aria-selected="false">Subscribe</a></li>
+		<li class="nav-item"><a class="nav-link" id="pills-explore-tab"
+			data-toggle="pill" href="#pills-explore" role="tab"
+			aria-controls="pills-explore" aria-selected="false">Explore</a></li>
 		<li class="nav-item"><a class="nav-link" id="pills-help-tab"
 			data-toggle="pill" href="#pills-help" role="tab"
 			aria-controls="pills-help" aria-selected="false">Help</a></li>
 	</ul>
 
 	<div class="tab-content" id="pills-tabContent">
+
+		<!-- EXPLORER TAB -->
+		<div class="tab-pane fade  mt-3" id="pills-explore" role="tabpanel"
+			 aria-labelledby="pills-query-tab">
+			<div id="tree"></div>
+		</div>
 
 		<!-- QUERY TAB -->
 		<div class="tab-pane fade  mt-3" id="pills-query" role="tabpanel"
@@ -457,7 +468,7 @@
 		crossorigin="anonymous"></script>
 
 	<script
-		src='http://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
+		src='https://cdn.jsdelivr.net/npm/yasgui-yasqe@2.11.22/dist/yasqe.bundled.min.js'></script>
 
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
@@ -467,7 +478,7 @@
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
-
+	<script src="js/bower_components/bootstrap-treeview.min.js"></script>
 	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 	<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
