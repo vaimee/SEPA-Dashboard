@@ -497,8 +497,13 @@ function query() {
 //Needed to optimize rendering with dataTables
 function renderQueryResultsWithDataTable(queryResponse,tableRef,tableId){
 	console.log("Rendering query results with dataTable...")
-	if(queryDataTable!=null) queryDataTable.destroy();
-	$("#queryTable").innerHTML="<thead><tr></tr></thead><tbody></tbody>";
+	if(queryDataTable!=null){
+		queryDataTable.destroy();
+		queryDataTable=null;
+	}
+	$("#queryTable").remove();
+	$("#queryTableContainer").empty();
+	$("#queryTableContainer").append('<table id="queryTable"><thead><tr></tr></thead><tbody></tbody></table>');
 	queryDataTable = $("#queryTable").DataTable({
 		responsive: true,
 		scrollX: true,
