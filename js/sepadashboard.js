@@ -593,7 +593,7 @@ function update() {
 	let bench = new Sepajs.bench()
 	updateText = bench.sparql(updateText, getForcedBindings("U"));
 
-	config = {host : $("#host").val() , sparql11protocol : { protocol: "http","port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
+	config = {host : $("#host").val() , sparql11protocol : { protocol: $("#sparql11protocol").val(),"port" : $("#sparql11port").val() ,update :{ "path" : $("#updatePath").val()}}};
 	
 	const sepa = Sepajs.client;
 	start = Date.now();
