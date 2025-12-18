@@ -1,7 +1,11 @@
 #!/bin/bash
+echo "Starting dashboard..."
 
 # Ensure the required environment variable is set
-cfg_path=/usr/share/nginx/html/js/config.js
+cfg_path=/usr/share/nginx/html/js/config.jsc
+
+echo "Configuration file"
+echo $cfg_path
 
 #Load variables
 echo "___SEPA_DASHBOARD_INLINE_JSON_CONFIG___ = {" > $cfg_path
